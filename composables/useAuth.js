@@ -10,7 +10,7 @@ export const useAuth = () => {
     try {
       const data = await api.post("/auth/login", user);
       setUser(data.user);
-      setCookie("sessionToken", data.token, { expires: 7 });
+      setCookie("authToken", data.token, { expires: 7 });
     } catch (err) {}
   };
   const userLoggedIn = async () => {
@@ -22,7 +22,7 @@ export const useAuth = () => {
         } else {
           cookie = useRequestHeaders(["cookie"])?.cookie || null;
         }
-        if (cookie && cookieParse(cookie)?.sessionToken) {
+        if (cookie && cookieParse(cookie)?.authToken) {
           const data = await api.get("/auth/user");
           setUser(data.user);
         }
@@ -32,7 +32,7 @@ export const useAuth = () => {
     }
   };
   const logout = (redirect = "/") => {
-    removeCookie("sessionToken");
+    removeCookie("authToken");
     setUser(null);
     navigateTo(redirect);
   };
@@ -40,7 +40,7 @@ export const useAuth = () => {
     try {
       const data = await api.get("/user/refresh-token");
       setUser(data.user);
-      setCookie("sessionToken", data.token, { expires: 7 });
+      setCookie("authToken", data.token, { expires: 7 });
       return data;
     } catch (err) {
       console.error(err);

@@ -18,11 +18,11 @@ export const useApi = () => {
         const cookie = useRequestHeaders(["cookie"])?.cookie;
         if (cookie) {
           const parse = cookieParse(cookie);
-          token = parse?.sessionToken || null;
+          token = parse?.authToken || null;
         }
       } else {
         const parse = cookieParse();
-        token = parse?.sessionToken || null;
+        token = parse?.authToken || null;
       }
       const headers = {
         "Content-Type": "application/json",

@@ -4,60 +4,7 @@
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger as-child>
-                <SidebarMenuButton
-                  size="lg"
-                  class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <div
-                    class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
-                  >
-                    <component :is="activeTeam.logo" class="size-4" />
-                  </div>
-                  <div class="grid flex-1 text-left text-sm leading-tight">
-                    <span class="truncate font-semibold">{{
-                      activeTeam.name
-                    }}</span>
-                    <span class="truncate text-xs">{{ activeTeam.plan }}</span>
-                  </div>
-                  <ChevronsUpDownIcon class="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                align="start"
-                side="bottom"
-                :side-offset="4"
-              >
-                <DropdownMenuLabel class="text-xs text-muted-foreground">
-                  Teams
-                </DropdownMenuLabel>
-                <DropdownMenuItem
-                  v-for="(team, index) in data.teams"
-                  :key="team.name"
-                  class="gap-2 p-2"
-                  @click="setActiveTeam(index)"
-                >
-                  <div
-                    class="flex size-6 items-center justify-center rounded-sm border"
-                  >
-                    <component :is="team.logo" class="size-4 shrink-0" />
-                  </div>
-                  {{ team.name }}
-                  <DropdownMenuShortcut>⌘{{ index + 1 }}</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem class="gap-2 p-2">
-                  <div
-                    class="flex size-6 items-center justify-center rounded-md border bg-background"
-                  >
-                    <PlusIcon class="size-4" />
-                  </div>
-                  <div class="font-medium text-muted-foreground">Add team</div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <DashboardTeam />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -100,52 +47,6 @@
             </Collapsible>
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarGroup class="group-data-[collapsible=icon]:hidden">
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
-          <SidebarMenu>
-            <SidebarMenuItem v-for="item in data.projects" :key="item.name">
-              <SidebarMenuButton as-child>
-                <a :href="item.url">
-                  <component :is="item.icon" />
-                  <span>{{ item.name }}</span>
-                </a>
-              </SidebarMenuButton>
-              <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                  <SidebarMenuAction show-on-hover>
-                    <MoreHorizontalIcon />
-                    <span class="sr-only">More</span>
-                  </SidebarMenuAction>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  class="w-48 rounded-lg"
-                  side="bottom"
-                  align="end"
-                >
-                  <DropdownMenuItem>
-                    <FolderIcon class="text-muted-foreground" />
-                    <span>View Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <ForwardIcon class="text-muted-foreground" />
-                    <span>Share Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Trash2Icon class="text-muted-foreground" />
-                    <span>Delete Project</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton class="text-sidebar-foreground/70">
-                <MoreHorizontalIcon class="text-sidebar-foreground/70" />
-                <span>More</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
@@ -157,17 +58,14 @@
                   class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar class="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      :src="data.user.avatar"
-                      :alt="data.user.name"
-                    />
+                    <AvatarImage :src="authUser.avatar" :alt="authUser.name" />
                     <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
                   </Avatar>
                   <div class="grid flex-1 text-left text-sm leading-tight">
                     <span class="truncate font-semibold">{{
-                      data.user.name
+                      authUser.name
                     }}</span>
-                    <span class="truncate text-xs">{{ data.user.email }}</span>
+                    <span class="truncate text-xs">{{ authUser.email }}</span>
                   </div>
                   <ChevronsUpDownIcon class="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -184,45 +82,43 @@
                   >
                     <Avatar class="h-8 w-8 rounded-lg">
                       <AvatarImage
-                        :src="data.user.avatar"
-                        :alt="data.user.name"
+                        :src="authUser.avatar"
+                        :alt="authUser.name"
                       />
                       <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
                     </Avatar>
                     <div class="grid flex-1 text-left text-sm leading-tight">
                       <span class="truncate font-semibold">{{
-                        data.user.name
+                        authUser.name
                       }}</span>
-                      <span class="truncate text-xs">{{
-                        data.user.email
-                      }}</span>
+                      <span class="truncate text-xs">{{ authUser.email }}</span>
                     </div>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem class="cursor-pointer">
                     <SparklesIcon />
                     Upgrade to Pro
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem class="cursor-pointer">
                     <BadgeCheckIcon />
                     Account
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem class="cursor-pointer">
                     <CreditCardIcon />
                     Billing
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem class="cursor-pointer">
                     <BellIcon />
                     Notifications
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem class="cursor-pointer" @click="logout">
                   <LogOutIcon />
                   Log out
                 </DropdownMenuItem>
@@ -275,13 +171,9 @@ import {
   CreditCardIcon,
   FolderIcon,
   ForwardIcon,
-  FrameIcon,
   GalleryVerticalEndIcon,
   LogOutIcon,
-  MapIcon,
   MoreHorizontalIcon,
-  PieChartIcon,
-  PlusIcon,
   Settings2Icon,
   SparklesIcon,
   SquareTerminalIcon,
@@ -297,12 +189,8 @@ export default {
     ChevronRightIcon,
     ChevronsUpDownIcon,
     CommandIcon,
-    FrameIcon,
     GalleryVerticalEndIcon,
     LogOutIcon,
-    MapIcon,
-    PieChartIcon,
-    PlusIcon,
     Settings2Icon,
     SquareTerminalIcon,
     MoreHorizontalIcon,
@@ -424,23 +312,6 @@ export default {
                 url: "#",
               },
             ],
-          },
-        ],
-        projects: [
-          {
-            name: "Design Engineering",
-            url: "#",
-            icon: FrameIcon,
-          },
-          {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChartIcon,
-          },
-          {
-            name: "Travel",
-            url: "#",
-            icon: MapIcon,
           },
         ],
       },
