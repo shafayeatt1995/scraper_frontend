@@ -29,6 +29,8 @@ export const useAuth = () => {
       }
     } catch (error) {
       console.error(error);
+      setUser(false);
+    } finally {
     }
   };
   const logout = (redirect = "/") => {

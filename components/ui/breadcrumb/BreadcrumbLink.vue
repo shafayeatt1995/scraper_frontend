@@ -1,10 +1,10 @@
 <script setup>
-import { cn } from '@/lib/utils';
-import { Primitive } from 'radix-vue';
+import { cn } from "@/lib/utils";
+import { Primitive } from "radix-vue";
 
 const props = defineProps({
   asChild: { type: Boolean, required: false },
-  as: { type: null, required: false, default: 'a' },
+  as: { type: null, required: false, default: "a" },
   class: { type: null, required: false },
 });
 </script>

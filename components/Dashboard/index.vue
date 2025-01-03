@@ -36,9 +36,9 @@
                       :key="subItem.title"
                     >
                       <SidebarMenuSubButton as-child>
-                        <a :href="subItem.url">
+                        <NuxtLink :to="subItem.to" class="hover:bg-gray-100">
                           <span>{{ subItem.title }}</span>
-                        </a>
+                        </NuxtLink>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   </SidebarMenuSub>
@@ -108,6 +108,12 @@
                     <BadgeCheckIcon />
                     Account
                   </DropdownMenuItem>
+                  <DropdownMenuItem class="cursor-pointer" asChild>
+                    <NuxtLink :to="{ name: 'dashboard-team' }">
+                      <UsersIcon />
+                      Team Members
+                    </NuxtLink>
+                  </DropdownMenuItem>
                   <DropdownMenuItem class="cursor-pointer">
                     <CreditCardIcon />
                     Billing
@@ -136,19 +142,7 @@
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <DashboardBreadcrumb />
         </div>
       </header>
       <div class="w-full p-4 pt-0">
@@ -178,6 +172,7 @@ import {
   SparklesIcon,
   SquareTerminalIcon,
   Trash2Icon,
+  UsersIcon,
 } from "lucide-vue-next";
 
 export default {
@@ -201,6 +196,7 @@ export default {
     BellIcon,
     CreditCardIcon,
     SparklesIcon,
+    UsersIcon,
   },
   data() {
     return {
@@ -229,14 +225,13 @@ export default {
         ],
         navMain: [
           {
-            title: "Playground",
-            url: "#",
+            title: "Scraper",
             icon: SquareTerminalIcon,
             isActive: true,
             items: [
               {
-                title: "History",
-                url: "#",
+                title: "Sitemap",
+                to: { name: "dashboard-sitemap" },
               },
               {
                 title: "Starred",
@@ -316,7 +311,6 @@ export default {
         ],
       },
       activeItem: 0,
-      interval: null,
     };
   },
   computed: {
@@ -336,24 +330,9 @@ export default {
       return !!authUser.value?.isFreeUser;
     },
   },
-  mounted() {
-    this.trigger();
-    this.interval = setInterval(() => {
-      this.trigger();
-    }, 12 * 60 * 1000);
-  },
-  unmounted() {
-    clearInterval(this.interval);
-  },
   methods: {
     setActiveTeam(i) {
       this.activeItem = i;
-    },
-    async trigger() {
-      try {
-        const { api } = useApi();
-        await api.get2("/");
-      } catch (error) {}
     },
     async logout() {
       try {

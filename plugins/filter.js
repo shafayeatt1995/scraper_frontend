@@ -59,6 +59,8 @@ export default defineNuxtPlugin(() => {
           value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
         currencyNumber: (value) => value.toLocaleString("en-IN"),
         mathRound: (value) => Math.round(value),
+        avatarName: (value) =>
+          value.split(" ").slice(0, 2).join("").toUpperCase(),
       },
     },
   };

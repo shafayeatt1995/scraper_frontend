@@ -11,7 +11,7 @@
           <CommandIcon class="size-4" />
         </div>
         <div class="grid flex-1 text-left text-sm leading-tight">
-          <span class="truncate font-semibold">No team selected</span>
+          <span class="truncate font-semibold">{{ activeTeam.name }}</span>
           <span class="truncate text-xs">Free plan</span>
         </div>
         <ChevronsUpDownIcon class="ml-auto" />
@@ -30,7 +30,7 @@
         v-for="(team, index) in teams"
         :key="team.name"
         class="gap-2 p-2 cursor-pointer"
-        @click="setActiveTeam(index)"
+        @click="setActiveTeam(team)"
       >
         <div class="flex size-6 items-center justify-center rounded-sm border">
           <AudioWaveformIcon class="size-4 shrink-0" />
@@ -98,7 +98,16 @@ export default {
       form: { name: "" },
       teams: [],
       errors: {},
+      activeTeam: { name: "Default team" },
     };
+  },
+  watch: {
+    activeTeam(val) {
+      const { value } = useData();
+      const { setItem } = useUtils();
+      setItem("activeTeam", val._id);
+      value.activeTeam = val;
+    },
   },
   mounted() {
     this.fetchTeams();
@@ -109,6 +118,11 @@ export default {
         const { api } = useApi();
         const { items } = await api.get("/dashboard/team");
         this.teams = items;
+        const { getItem } = useUtils();
+        const activeTeam = getItem("activeTeam", null);
+        this.activeTeam = this.teams.find(
+          (team) => team._id === activeTeam
+        ) || { name: "Default team" };
       } catch (error) {
         console.error(error);
       }
@@ -131,6 +145,9 @@ export default {
         this.blocked = false;
         this.loading = false;
       }
+    },
+    setActiveTeam(team) {
+      this.activeTeam = team;
     },
   },
 };
