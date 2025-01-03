@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt build --preset=vercel_edge",
     "dev": "nuxt dev -p 8080 --host",
     "generate": "nuxt generate",
     "preview": "PORT=8080 HOST=0.0.0.0 nuxt preview",
