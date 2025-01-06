@@ -57,7 +57,7 @@
               >
                 <template v-for="field in fields">
                   <td
-                    class="px-4 py-4 text-sm font-medium flex items-center text-gray-700 overflow-hidden"
+                    class="text-sm font-medium flex items-center text-gray-700 overflow-hidden"
                     v-if="!field.hide || false"
                     :key="field.key"
                     :class="[
@@ -67,6 +67,7 @@
                           : 'hidden lg:block'
                         : '',
                       field.class,
+                      slim ? 'p-2' : 'p-4',
                     ]"
                     :style="{ '--col-span-mobile': field.col_span_mobile || 1 }"
                     @click.capture="activeDropdown = item?._id"
@@ -129,6 +130,7 @@ export default {
     per_page: { type: Number, default: 10 },
     value: { type: Number, default: 1 },
     active: { type: Number, default: null },
+    slim: { type: Boolean, default: false },
   },
 
   data() {

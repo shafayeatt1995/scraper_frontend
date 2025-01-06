@@ -97,7 +97,6 @@ export const useUtils = () => {
     },
 
     setCookie(name, value, options = {}) {
-      console.log(name, value, options);
       let expiresOption = "";
       const { expires, ...otherOptions } = options;
 

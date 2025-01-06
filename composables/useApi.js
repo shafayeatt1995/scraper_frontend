@@ -11,7 +11,8 @@ export const useApi = () => {
       jsonBody = null,
       formData = null,
       params = null,
-      api2 = false
+      api2 = false,
+      header = { "Content-Type": "application/json" }
     ) {
       let token = null;
       if (typeof window === "undefined") {
@@ -25,7 +26,7 @@ export const useApi = () => {
         token = parse?.authToken || null;
       }
       const headers = {
-        "Content-Type": "application/json",
+        ...header,
         ...(token
           ? token.startsWith("Bearer")
             ? { Authorization: token }
@@ -43,8 +44,8 @@ export const useApi = () => {
       return $fetch((api2 ? AP2I_URL : API_URL) + url + query, options);
     },
 
-    get(url, params) {
-      return this.request("GET", url, null, null, params);
+    get(url, params, headers) {
+      return this.request("GET", url, null, null, params, false, headers);
     },
 
     post(url, jsonBody = null, formData = null) {
